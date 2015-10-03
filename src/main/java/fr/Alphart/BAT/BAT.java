@@ -59,7 +59,7 @@ public class BAT extends Plugin {
 		instance = this;
 		if(getBCBuild() < requiredBCBuild){
 			getLogger().severe("Your BungeeCord build (#" + getBCBuild() + ") is not supported. Please use at least BungeeCord #" + requiredBCBuild);
-			getLogger().severe("BAT is going to shutdown ...");
+			getLogger().severe("BAT shutting down!");
 			return;
 		}
 		getLogger().setLevel(Level.INFO);
@@ -110,7 +110,7 @@ public class BAT extends Plugin {
 			        modules = new ModulesManager();
 					modules.loadModules();
 				} else {
-					getLogger().severe("BAT is gonna shutdown because it can't connect to the database.");
+					getLogger().severe("BAT is going to shut down because it cannot connect to the database provided.");
 					return;
 				}
 				// Init the I18n module
@@ -131,7 +131,7 @@ public class BAT extends Plugin {
 			}
 		}catch(final NumberFormatException e){
 			// We can't determine BC build, just display a message, and set the build so it doesn't trigger the security
-			getLogger().info("BC build can't be detected. If you encounter any problems, please report that message. Otherwise don't take into account");
+			getLogger().info("BungeeCord build cannot be detected. If you encounter any problems, please report that message. Otherwise don't take into account");
 			BCBuild = requiredBCBuild;
 		}
 		return BCBuild;
@@ -148,14 +148,14 @@ public class BAT extends Plugin {
 
 	public void loadDB(final Callback<Boolean> dbState) {
 		if (config.isMysql_enabled()) {
-		    getLogger().config("Starting connection to the mysql database ...");
+		    getLogger().config("Commencing connection to MySQL database provided...");
 			final String username = config.getMysql_user();
 			final String password = config.getMysql_password();
 			final String database = config.getMysql_database();
 			final String port = config.getMysql_port();
 			final String host = config.getMysql_host();
 			// BoneCP can accept no database and we want to avoid that
-			Preconditions.checkArgument(!"".equals(database), "You must set the database.");
+			Preconditions.checkArgument(!"".equals(database), "Database not available! Set one!");
 			ProxyServer.getInstance().getScheduler().runAsync(this, new Runnable() {
 				@Override
 				public void run() {
@@ -178,7 +178,7 @@ public class BAT extends Plugin {
 		// Before initialize the connection, we must download the sqlite driver
 		// (if it isn't already in the lib folder) and load it
 		else {
-		    getLogger().config("Starting connection to the sqlite database ...");
+		    getLogger().config("Commencing connection to SQLite database...");
 			getLogger().warning("It is strongly DISRECOMMENDED to use SQLite with BAT,"
 					+ " as the SQLite implementation is less stable and much slower than the MySQL implementation.");
 			if(loadSQLiteDriver()){
@@ -197,7 +197,7 @@ public class BAT extends Plugin {
 
 		// Download the driver if it doesn't exist
 		if (!new File(getDataFolder() + File.separator + "lib" + File.separator + "sqlite_driver.jar").exists()) {
-			getLogger().info("The SQLLite driver was not found. It is being downloaded, please wait ...");
+			getLogger().info("The SQLLite driver was not found. It's being downloaded, please wait ...");
 
 			final String driverUrl = "https://www.dropbox.com/s/ls7qoddx9m6t4vh/sqlite_driver.jar?dl=1";
 			FileOutputStream fos = null;
@@ -232,7 +232,7 @@ public class BAT extends Plugin {
 			Class.forName("org.sqlite.JDBC");
 			return true;
 		} catch (final Throwable t) {
-			getLogger().severe("The sqlite driver cannot be loaded. Please report this error : ");
+			getLogger().severe("The SQLite driver cannot be loaded. Please report this error : ");
 			t.printStackTrace();
 			return false;
 		}
@@ -307,7 +307,7 @@ public class BAT extends Plugin {
 	 */
 	public static void kick(final ProxiedPlayer player, final String reason) {
 		if (reason == null || reason.equals("")) {
-			player.disconnect(TextComponent.fromLegacyText("You have been disconnected of the server."));
+			player.disconnect(TextComponent.fromLegacyText("You have been disconnected from the instance."));
 		} else {
 			player.disconnect(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', reason)));
 		}
